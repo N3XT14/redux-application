@@ -1,10 +1,8 @@
 // src/react-components/FormDataDisplay.js
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
-const FormDataDisplay = ({ formData }) => {
-  const submittedData = useSelector((state) => state.submittedData);
-
+const FormDataDisplay = ({ submittedData }) => {
   return (
     <div>
       <h2>Form Data Display</h2>
@@ -19,4 +17,12 @@ const FormDataDisplay = ({ formData }) => {
   );
 };
 
-export default FormDataDisplay;
+// mapStateToProps: Maps the state from the Redux store to props
+const mapStateToProps = (state) => {
+  return {
+    submittedData: state.submittedData,
+  };
+};
+
+// Connect the component to the Redux store
+export default connect(mapStateToProps)(FormDataDisplay);

@@ -1,11 +1,10 @@
 // src/react-components/Form.js
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { submitFormData } from '../redux/actions';
 
-const Form = ({ onSubmit }) => {
-  const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
+const Form = ({ formData, onSubmit }) => {
+  const [localFormData, setLocalFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -13,7 +12,7 @@ const Form = ({ onSubmit }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -21,7 +20,7 @@ const Form = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(submitFormData(formData));
+    onSubmit(localFormData);
   };
 
   return (
@@ -29,19 +28,37 @@ const Form = ({ onSubmit }) => {
       <h2>Form</h2>
       <label>
         First Name:
-        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
+        <input type="text" name="firstName" value={localFormData.firstName} onChange={handleChange} />
       </label>
       <label>
         Last Name:
-        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
+        <input type="text" name="lastName" value={localFormData.lastName} onChange={handleChange} />
       </label>
       <label>
         Email:
-        <input type="email" name="email" value={formData.email} onChange={handleChange} />
+        <input type="email" name="email" value={localFormData.email} onChange={handleChange} />
       </label>
       <button type="submit">Submit</button>
     </form>
   );
 };
 
-export default Form;
+// mapStateToProps: Maps the state from the Redux store to props
+// state is the state from Redux Store
+// props is the props from the parent component (which is App.js in this case)
+// Connecting mapStateToProps lets this component use this.props to get state from the Redux Store and props from the parent component.
+const mapStateToProps = (state, props) => {
+  return {
+    formData: state.submittedData,
+  };
+};
+
+// mapDispatchToProps: Maps action creators to props
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSubmit: (formData) => dispatch(submitFormData(formData)),
+  };
+};
+
+// Connect the component to the Redux store
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

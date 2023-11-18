@@ -1,18 +1,18 @@
 // src/redux/reducers.js
-const initialState = {
-  submittedData: null,
-};
+import { combineReducers } from 'redux';
 
-const rootReducer = (state = initialState, action) => {
+const formDataReducer = (state = null, action) => {
   switch (action.type) {
     case 'SUBMIT_FORM_DATA':
-      return {
-        ...state,
-        submittedData: action.payload,
-      };
+      return action.payload;
     default:
       return state;
   }
 };
+
+const rootReducer = combineReducers({
+  submittedData: formDataReducer,
+  // Add other reducers if needed
+});
 
 export default rootReducer;
